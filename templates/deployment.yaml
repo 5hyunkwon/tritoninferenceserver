@@ -27,23 +27,23 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ template "tritoninferenceserver.fullname" . }}
+  name: {{ include "tritoninferenceserver.fullname" . }}
   namespace: {{ .Release.Namespace }}
   labels:
-    app: {{ template "tritoninferenceserver.name" . }}
-    chart: {{ template "tritoninferenceserver.chart" . }}
+    app: {{ include "tritoninferenceserver.name" . }}
+    chart: {{ include "tritoninferenceserver.chart" . }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
-      app: {{ template "tritoninferenceserver.name" . }}
+      app: {{ include "tritoninferenceserver.name" . }}
       release: {{ .Release.Name }}
   template:
     metadata:
       labels:
-        app: {{ template "tritoninferenceserver.name" . }}
+        app: {{ include "tritoninferenceserver.name" . }}
         release: {{ .Release.Name }}
 
     spec:
