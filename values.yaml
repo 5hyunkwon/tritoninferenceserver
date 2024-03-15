@@ -33,4 +33,4 @@ image:
   numGpus: 1
 
 service:
-  type: ClusterIP
+  type: LoadBalancer
