@@ -38,13 +38,13 @@ spec:
   type: {{ .Values.service.type }}
   ports:
     - port: 8000
-      targetPort: http
+      targetPort: 8000
       name: http-inference-server
     - port: 8001
-      targetPort: grpc
+      targetPort: 8001
       name: grpc-inference-server
     - port: 8002
-      targetPort: metrics
+      targetPort: 8002
       name: metrics-inference-server
   selector:
     app: {{ include "tritoninferenceserver.name" . }}
