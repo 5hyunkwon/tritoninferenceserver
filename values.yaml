@@ -30,7 +30,7 @@ image:
   imageName: nvcr.io/nvidia/tritonserver:23.10-py3
   pullPolicy: IfNotPresent
   modelRepositoryPath: s3://cva-vrnet-bucket/model-repository
-  numGpus: 1
+  numGpus: "1"
 
 service:
   type: LoadBalancer
