@@ -63,8 +63,8 @@ metadata:
 spec:
   type: {{ .Values.service.type }}
   ports:
-    - port: 8000
-      targetPort: 443
+    - port: 5000
+      targetPort: 5000
       name: http-fastapi-server
   selector:
     app: {{ include "tritoninferenceserver.name" . }}
