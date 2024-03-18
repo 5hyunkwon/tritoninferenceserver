@@ -49,3 +49,23 @@ spec:
   selector:
     app: {{ include "tritoninferenceserver.name" . }}
     release: {{ .Release.Name }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: triton-client-fastapi
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: triton-client-fastapi
+    chart: {{ include "tritoninferenceserver.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+    - port: 8000
+      targetPort: 443
+      name: http-fastapi-server
+  selector:
+    app: {{ include "tritoninferenceserver.name" . }}
+    release: {{ .Release.Name }}

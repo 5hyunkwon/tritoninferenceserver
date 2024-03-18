@@ -49,14 +49,14 @@ spec:
     spec:
       containers:
         - name: {{ .Chart.Name }}
-          image: "{{ .Values.image.imageName }}"
-          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          image: "{{ .Values.imageTriton.imageName }}"
+          imagePullPolicy: {{ .Values.imageTriton.pullPolicy }}
 
           resources:
             limits:
-              nvidia.com/gpu: {{ .Values.image.numGpus }}
+              nvidia.com/gpu: {{ .Values.imageTriton.numGpus }}
 
-          args: ["tritonserver", "--model-repository={{ .Values.image.modelRepositoryPath }}"]
+          args: ["tritonserver", "--model-repository={{ .Values.imageTriton.modelRepositoryPath }}"]
           # env:
           #   - name: GOOGLE_APPLICATION_CREDENTIALS
           #     value: /secret/gcp-creds.json
@@ -81,3 +81,23 @@ spec:
 
           securityContext:
             runAsUser: 1000
+        - name: triton-client-fastapi
+          image: "{{ .Values.imageFastapi.imageName }}"
+          imagePullPolicy: {{ .Values.imageFastapi.pullPolicy }}
+          
+          workingDir: "/models"
+          args: ["uvicorn", "main:app" "--host=0.0.0.0", "--port=8000", "--reload"]
+
+          ports:
+            - containerPort: 8000
+              name: http-fastapi
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: http-fastapi
+          readinessProbe:
+            initialDelaySeconds: 5
+            periodSeconds: 5
+            httpGet:
+              path: /health
+              port: http-fastapi
