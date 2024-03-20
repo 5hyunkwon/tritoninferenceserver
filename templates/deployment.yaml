@@ -118,11 +118,11 @@ spec:
               name: http-fastapi
           livenessProbe:
             httpGet:
-              path: /health
+              path: /v2/health
               port: http-fastapi
           readinessProbe:
             initialDelaySeconds: 5
             periodSeconds: 5
             httpGet:
-              path: /health
+              path: /v2/health
               port: http-fastapi
