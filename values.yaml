@@ -40,6 +40,6 @@ images:
 
 service:
   triton:
-    type: LoadBalancer
+    type: ClusterIP
   fastapi:
     type: LoadBalancer
