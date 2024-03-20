@@ -35,7 +35,7 @@ images:
     modelRepositoryPath: s3://cva-vrnet-bucket/model-repository
     numGpus: "1"
   fastapi:
-    imageName: 5hyunkwon/triton-client-fastapi:1.0.0
+    imageName: 5hyunkwon/triton-client-fastapi:1.0.1
     pullPolicy: IfNotPresent
 
 service:
