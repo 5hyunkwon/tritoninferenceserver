@@ -35,7 +35,7 @@ metadata:
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 spec:
-  type: {{ .Values.service.type }}
+  type: {{ .Values.service.triton.type }}
   ports:
     - port: 8000
       targetPort: http
@@ -61,11 +61,11 @@ metadata:
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 spec:
-  type: {{ .Values.service.type }}
+  type: {{ .Values.service.fastapi.type }}
   ports:
     - port: 5000
       targetPort: 5000
       name: http-fastapi-server
   selector:
-    app: {{ include "tritoninferenceserver.name" . }}
+    app: triton-client-fastapi
     release: {{ .Release.Name }}

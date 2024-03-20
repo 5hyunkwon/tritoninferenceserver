@@ -35,7 +35,7 @@ metadata:
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 spec:
-  replicas: {{ .Values.replicaCount }}
+  replicas: {{ .Values.replicaCount.triton }}
   selector:
     matchLabels:
       app: {{ include "tritoninferenceserver.name" . }}
@@ -49,14 +49,14 @@ spec:
     spec:
       containers:
         - name: {{ .Chart.Name }}
-          image: "{{ .Values.imageTriton.imageName }}"
-          imagePullPolicy: {{ .Values.imageTriton.pullPolicy }}
+          image: "{{ .Values.images.triton.imageName }}"
+          imagePullPolicy: {{ .Values.images.triton.pullPolicy }}
 
           resources:
             limits:
-              nvidia.com/gpu: {{ .Values.imageTriton.numGpus }}
+              nvidia.com/gpu: {{ .Values.images.triton.numGpus }}
 
-          args: ["tritonserver", "--model-repository={{ .Values.imageTriton.modelRepositoryPath }}"]
+          args: ["tritonserver", "--model-repository={{ .Values.images.triton.modelRepositoryPath }}"]
           # env:
           #   - name: GOOGLE_APPLICATION_CREDENTIALS
           #     value: /secret/gcp-creds.json
@@ -81,9 +81,34 @@ spec:
 
           securityContext:
             runAsUser: 1000
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: triton-client-fastapi
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: triton-client-fastapi
+    chart: {{ include "tritoninferenceserver.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  replicas: {{ .Values.replicaCount.fastapi }}
+  selector:
+    matchLabels:
+      app: triton-client-fastapi
+      release: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app: triton-client-fastapi
+        release: {{ .Release.Name }}
+
+    spec:
+      containers:
         - name: triton-client-fastapi
-          image: "{{ .Values.imageFastapi.imageName }}"
-          imagePullPolicy: {{ .Values.imageFastapi.pullPolicy }}
+          image: "{{ .Values.images.fastapi.imageName }}"
+          imagePullPolicy: {{ .Values.images.fastapi.pullPolicy }}
           
           workingDir: "/models"
           args: ["uvicorn", "main:app", "--host=0.0.0.0", "--port=5000", "--reload"]
