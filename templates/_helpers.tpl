@@ -35,7 +35,7 @@ Expand the name of the chart.
 {{- end -}}
 
 {{- define "fastapi.name" -}}
-{{- .Release.Name "fastapi" -}}
+{{- .Release.Name + "fastapi" -}}
 {{- end -}}
 
 {{/*
@@ -57,7 +57,7 @@ If release name contains chart name it will be used as a full name.
 {{- end -}}
 
 {{- define "fastapi.fullname" -}}
-{{- .Release.Name "fastapi" -}}
+{{- .Release.Name + "fastapi" -}}
 {{- end -}}
 
 {{/*
