@@ -53,10 +53,10 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: triton-client-fastapi
+  name: {{ include "fastapi.fullname" . }}
   namespace: {{ .Release.Namespace }}
   labels:
-    app: triton-client-fastapi
+    app: {{ include "fastapi.name" . }}
     chart: {{ include "tritoninferenceserver.chart" . }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
@@ -67,5 +67,5 @@ spec:
       targetPort: 5000
       name: http-fastapi-server
   selector:
-    app: triton-client-fastapi
+    app: {{ include "fastapi.name" . }}
     release: {{ .Release.Name }}

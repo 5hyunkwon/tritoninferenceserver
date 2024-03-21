@@ -85,10 +85,10 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: triton-client-fastapi
+  name: {{ include "fastapi.fullname" . }}
   namespace: {{ .Release.Namespace }}
   labels:
-    app: triton-client-fastapi
+    app: {{ include "fastapi.name" . }}
     chart: {{ include "tritoninferenceserver.chart" . }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
@@ -96,12 +96,12 @@ spec:
   replicas: {{ .Values.replicaCount.fastapi }}
   selector:
     matchLabels:
-      app: triton-client-fastapi
+      app: {{ include "fastapi.name" . }}
       release: {{ .Release.Name }}
   template:
     metadata:
       labels:
-        app: triton-client-fastapi
+        app: {{ include "fastapi.name" . }}
         release: {{ .Release.Name }}
 
     spec:
