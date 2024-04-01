@@ -42,4 +42,74 @@ service:
   triton:
     type: ClusterIP
   fastapi:
-    type: LoadBalancer
+    type: ClusterIP
+
+ingress:
+  enabled: true
+  className: "alb"
+  annotations:   
+    ######################## must 공통    #######################
+    #service.beta.kubernetes.io/aws-load-balancer-backend-protocol: "http"
+    #service.beta.kubernetes.io/aws-load-balancer-ssl-ports: "https"
+    #alb.ingress.kubernetes.io/subnets:                      "subnet-05a5d148f0ecf401b,subnet-0942a47dadfb3c436,subnet-044d6cb18cd1b43dc"
+    ### target-type  option
+    alb.ingress.kubernetes.io/target-type:                  "ip"              # must  ip  not instance  instance
+    #alb.ingress.kubernetes.io/target-type:                  "instance"       # must  ip  not instance  무조건 nodePort service
+    ### scheme option                                                         ## must 
+    alb.ingress.kubernetes.io/scheme:                       "internet-facing" # must  internet-facing not internal 
+    #alb.ingress.kubernetes.io/listen-ports: '[{"HTTPS":443}]'
+    #alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:ap-northeast-2:179974500967:certificate/30cb2102-ca97-4e2f-8475-429760f0db2a
+    #alb.ingress.kubernetes.io/ssl-policy: ELBSecurityPolicy-2016-08
+    #alb.ingress.kubernetes.io/load-balancer-attributes: deletion_protection.enabled=true
+    #alb.ingress.kubernetes.io/security-groups: sg-01d4135eb09308357
+    # --- tage 명지정 alb.ingress.kubernetes.io/tags:                         "Name:k8s-ingress-origin,Make:helm"
+
+    
+    ######################## person 옵션    #######################
+    #한개의 LoadBalancer에  여러개의  Ingress 를 붙여 사용시 group name, order 바꾸어서 사용해야 함.
+    
+    # 인프라 담당자 에게 문의하고 group order 숫자를 올려저야 함.
+    #! alb.ingress.kubernetes.io/group.name:                   "lb-work"        ## must group order 같이 이름변경
+    #! alb.ingress.kubernetes.io/group.order:                  "201"            # 1- 1000
+    
+
+    alb.ingress.kubernetes.io/healthcheck-interval-seconds: "15"
+    alb.ingress.kubernetes.io/healthcheck-path:             "/v2/health"
+    alb.ingress.kubernetes.io/healthcheck-port:             "traffic-port"   # 숫자(정수) | traffic-port
+    alb.ingress.kubernetes.io/healthcheck-protocol:         "HTTP"
+    alb.ingress.kubernetes.io/healthcheck-timeout-seconds:  "5"
+    alb.ingress.kubernetes.io/healthy-threshold-count:      "2"
+    alb.ingress.kubernetes.io/load-balancer-name:           "dev-cloudvision-api-alb"
+    alb.ingress.kubernetes.io/success-codes:                "200"
+    alb.ingress.kubernetes.io/unhealthy-threshold-count:    "2"
+
+
+
+    ##################### 추가로 다음 속성도 고려  NLB ##############
+
+    # Network Load Balancer 및 Gateway Load Balancer에서 지원됩니다.
+    #load_balancing.cross_zone.enabled- 교차 영역 로드 밸런싱이 활성화되었는지 여부를 나타냅니다. 가능한 값은 true및 false입니다. 기본값은 false입니다.
+    
+    # Route53 사용시 자동지정으로 만들어줌.
+    #external-dns.alpha.kubernetes.io/hostname:              "node-sky.aiops-mz.com"   
+    #service.beta.kubernetes.io/aws-load-balancer-attributes: load_balancing.cross_zone.enabled=true    
+    #service.beta.kubernetes.io/aws-load-balancer-target-group-attributes: deregistration_delay.connection_termination.enabled=true, preserve_client_ip.enabled=true, deregistration_delay.timeout_seconds=120    
+
+
+
+
+  ## host 도메인명은 꼭 지정해야 함.  아래는 예시       
+    
+  #hosts: 
+  #  - host: dev-cloudvision-api.hmg-corp.io
+  #    paths:
+  #      - path: /
+  #        pathType: Prefix
+    #   paths:
+    #     - path: /*
+    #       pathType: ImplementationSpecific
+    #       preView : "-preview"
+  #tls: []
+  #  - secretName: chart-example-tls
+  #    hosts:
+  #      - chart-example.local
