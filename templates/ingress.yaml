@@ -45,16 +45,16 @@ spec:
   
   rules:
     - http:
-      paths:
-        - path: /*
-          backend:
-            {{- if semverCompare ">=1.19-0" $.Capabilities.KubeVersion.GitVersion }}
-            service:
-              name: {{ $name }}
-              port:
-                number: 5000
-            {{- else }}
-            serviceName: {{ $name }}
-            servicePort: 5000
-            {{- end }}
+        paths:
+          - path: /*
+            backend:
+              {{- if semverCompare ">=1.19-0" $.Capabilities.KubeVersion.GitVersion }}
+              service:
+                name: {{ $name }}
+                port:
+                  number: 5000
+              {{- else }}
+              serviceName: {{ $name }}
+              servicePort: 5000
+              {{- end }}
 {{- end }}
