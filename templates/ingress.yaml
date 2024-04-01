@@ -57,3 +57,4 @@ spec:
             serviceName: {{ $name }}
             servicePort: 5000
             {{- end }}
+{{- end }}
